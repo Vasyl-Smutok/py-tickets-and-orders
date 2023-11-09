@@ -1,6 +1,6 @@
 # Tickets and orders
 
-- Read [the guideline](https://github.com/mate-academy/py-task-guideline/blob/main/README.md) before start
+Read [the guideline](https://github.com/mate-academy/py-task-guideline/blob/main/README.md) before starting.
 
 In `db/models.py` you already have tables you created earlier. Now
 you have to create or edit tables:
@@ -8,13 +8,13 @@ you have to create or edit tables:
     - index on field `title`.
 2. `Order`, with such fields:
     - datetime field `created_at`, the datetime when the order was created,
-set `auto_add_now` to fill this field automatically during the creation.
+set `auto_now_add` to fill this field automatically during the creation.
     - foreign key `user`, the user that created the order.
    
 There should be implemented the string representation of the order:
 ```python
 print(Order.objects.first())
-<Order: 2022-03-15 15:59:50.009379+00:00>
+<Order: 2022-03-15 15:59:50>
 ```
 Orders should be ordered from the newest to the oldest by default.
 
@@ -28,7 +28,7 @@ There should be implemented the string representation of the ticket, show
 information about movie session, row and seat:
 ```python
 print(Ticket.objects.first())
-<Ticket: Speed 2020-11-11 09:30:00+00:00 (row: 6, seat: 12)>
+<Ticket: Speed 2020-11-11 09:30:00 (row: 6, seat: 12)>
 ```
 Ticket should implement method `clean()`. This method should check if 
 `row` and `seat` are correct and are not greater than values in 
@@ -38,7 +38,7 @@ be raised. You also should override method `save()` and add there
 save the ticket.
 
 Also fields `row`, `seat`, `movie_session` should be unique together. 
-Use `UniqueConstraint`, [constraints](https://django.fun/docs/django/en/4.0/ref/models/options/#constraints).
+Use `UniqueConstraint`, [constraints](https://medium.com/@timmerop/how-to-add-a-uniqueconstraint-concurrently-in-django-2043c4752ee6).
 ```python
 import datetime
 
@@ -71,6 +71,14 @@ ticket.clean()
 the default user model with custom, edit `settings.py`, inside `INSTALLED_APPS`, 
 add there two apps: `"django.contrib.auth"` and `"django.contrib.contenttypes"`, also
 add `AUTH_USER_MODEL` equals to `"db.User"`.
+
+Use the following command to load prepared data from fixture to test and debug your code:
+  
+`python manage.py loaddata cinema_db_data.json`.
+
+- After loading data from fixture you can use following superuser (or create another one by yourself):
+  - Login: `admin.user`
+  - Password: `1qazcde3`
 
 In `services` you already have services you created earlier. Now
 you have to create or edit such services:
@@ -124,5 +132,7 @@ tickets with that order and data provided in `tickets`.
    purpose use [transaction.atomic](https://docs.djangoproject.com/en/4.0/topics/db/transactions/).
    - `get_orders`, takes optional `username`, if `username` is provided, returns
 all orders for the user with the provided username, else returns all orders.
-5. Edit `movie.py`:
-   - Edit `create_movie`, make it as transaction too.
+5. Edit `movie.py`, edit function:
+    - Edit `create_movie`, make it as transaction too.
+
+### Note: Check your code using this [checklist](checklist.md) before pushing your solution.
